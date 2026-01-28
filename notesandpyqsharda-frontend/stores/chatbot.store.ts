@@ -11,18 +11,31 @@ const SHARDA_KNOWLEDGE_BASE = {
       "introduction",
       "overview",
       "what is",
+      "tell me about",
+      "info",
+      "information",
+      "describe",
+      "details",
     ],
     response: `Sharda University is a leading private university located in Greater Noida, Uttar Pradesh, India. Established in 2009, it is recognized by UGC and accredited by NAAC with an 'A' grade. The university offers diverse programs across engineering, medicine, law, business, architecture, and more. With state-of-the-art infrastructure spread over 63 acres, Sharda University provides world-class education with international collaborations and modern facilities.`,
   },
   admissions: {
     keywords: [
       "admission",
+      "admissions",
       "apply",
+      "application",
       "enrollment",
+      "enroll",
       "join",
+      "joining",
       "how to get in",
       "entrance",
       "eligibility",
+      "criteria",
+      "admission process",
+      "how to apply",
+      "get admitted",
     ],
     response: `Sharda University offers admissions for undergraduate, postgraduate, and doctoral programs. Admissions are based on merit and entrance exams like JEE, NEET, CLAT, CAT, etc. depending on the program. You can apply online through the official website. 
 
@@ -38,15 +51,26 @@ For more details, visit the admissions office or check the official website.`,
   courses: {
     keywords: [
       "courses",
+      "course",
       "programs",
+      "program",
       "degree",
+      "degrees",
       "stream",
+      "streams",
       "branch",
+      "branches",
       "btech",
+      "b.tech",
+      "engineering",
       "mba",
       "mbbs",
       "study",
       "major",
+      "offer",
+      "available",
+      "what can i study",
+      "which courses",
     ],
     response: `Sharda University offers a wide range of programs:
 
@@ -65,13 +89,27 @@ Each program has specific eligibility criteria and duration.`,
   placements: {
     keywords: [
       "placement",
+      "placements",
       "job",
+      "jobs",
       "career",
+      "careers",
       "companies",
+      "company",
       "package",
+      "packages",
       "recruitment",
+      "recruit",
       "salary",
+      "salaries",
       "hiring",
+      "employed",
+      "employment",
+      "recruiter",
+      "recruiters",
+      "placed",
+      "opportunity",
+      "opportunities",
     ],
     response: `Sharda University has a dedicated Training & Placement Cell that works year-round to provide placement opportunities. Top recruiters include Microsoft, Amazon, Wipro, TCS, Infosys, Deloitte, Ernst & Young, and many more.
 
@@ -88,14 +126,28 @@ The university also organizes regular career fairs, workshops, and skill develop
   facilities: {
     keywords: [
       "facilities",
+      "facility",
       "infrastructure",
       "library",
+      "libraries",
       "hostel",
+      "hostels",
+      "accommodation",
       "lab",
+      "labs",
+      "laboratory",
       "sports",
+      "gym",
       "cafeteria",
+      "canteen",
+      "food",
       "amenities",
       "campus life",
+      "campus",
+      "swimming",
+      "medical",
+      "hospital",
+      "wifi",
     ],
     response: `Sharda University boasts excellent facilities:
 
@@ -111,13 +163,25 @@ The university also organizes regular career fairs, workshops, and skill develop
   fees: {
     keywords: [
       "fees",
+      "fee",
       "cost",
+      "costs",
       "tuition",
       "scholarship",
+      "scholarships",
       "financial",
+      "financial aid",
       "payment",
       "price",
+      "pricing",
       "expense",
+      "expenses",
+      "how much",
+      "afford",
+      "budget",
+      "emi",
+      "money",
+      "charges",
     ],
     response: `Fee structure varies by program:
 
@@ -140,11 +204,22 @@ Payment can be made semester-wise or annually. EMI options are also available.`,
       "location",
       "address",
       "where",
+      "where is",
       "reach",
       "directions",
+      "direction",
       "campus",
       "how to get",
+      "how to reach",
       "map",
+      "route",
+      "distance",
+      "metro",
+      "transport",
+      "travel",
+      "noida",
+      "greater noida",
+      "delhi",
     ],
     response: `Sharda University is located in Greater Noida, Uttar Pradesh, India.
 
@@ -163,11 +238,19 @@ The campus is easily accessible with good connectivity.`,
     keywords: [
       "contact",
       "phone",
+      "phone number",
       "email",
+      "email address",
       "helpline",
       "support",
       "call",
       "reach out",
+      "connect",
+      "get in touch",
+      "talk",
+      "speak",
+      "number",
+      "website",
     ],
     response: `You can reach Sharda University through:
 
@@ -187,8 +270,14 @@ For specific department queries, you can visit the campus or check the official 
       "foreign",
       "abroad",
       "exchange",
+      "exchange program",
       "global",
       "overseas",
+      "study abroad",
+      "foreign student",
+      "visa",
+      "partnership",
+      "worldwide",
     ],
     response: `Sharda University has a strong international presence:
 
@@ -211,19 +300,59 @@ export const SUGGESTED_QUESTIONS = [
   "How can I reach Sharda University campus?",
 ];
 
-// Function to find best matching response from knowledge base
+// Function to find best matching response from knowledge base with scoring
 function getFallbackResponse(userMessage: string): string {
   const messageLower = userMessage.toLowerCase();
 
-  // Check each category for keyword matches
-  for (const [category, data] of Object.entries(SHARDA_KNOWLEDGE_BASE)) {
-    const hasMatch = data.keywords.some((keyword) =>
-      messageLower.includes(keyword.toLowerCase()),
-    );
+  // Tokenize the message into words for better matching
+  const messageWords = messageLower
+    .split(/\s+/)
+    .filter((word) => word.length > 2);
 
-    if (hasMatch) {
-      return data.response;
+  // Calculate match scores for each category
+  const categoryScores: Array<{ category: string; score: number; data: any }> =
+    [];
+
+  for (const [category, data] of Object.entries(SHARDA_KNOWLEDGE_BASE)) {
+    let score = 0;
+
+    // Check each keyword for matches
+    for (const keyword of data.keywords) {
+      const keywordLower = keyword.toLowerCase();
+
+      // Exact phrase match (highest score)
+      if (messageLower.includes(keywordLower)) {
+        score += 10;
+      }
+
+      // Word-level matching (medium score)
+      const keywordWords = keywordLower.split(/\s+/);
+      for (const keywordWord of keywordWords) {
+        if (keywordWord.length > 2 && messageWords.includes(keywordWord)) {
+          score += 5;
+        }
+      }
+
+      // Partial word matching (lowest score)
+      for (const messageWord of messageWords) {
+        if (messageWord.length > 3 && keywordLower.includes(messageWord)) {
+          score += 2;
+        }
+        if (keywordLower.length > 3 && messageWord.includes(keywordLower)) {
+          score += 2;
+        }
+      }
     }
+
+    if (score > 0) {
+      categoryScores.push({ category, score, data });
+    }
+  }
+
+  // Sort by score (highest first) and return the best match
+  if (categoryScores.length > 0) {
+    categoryScores.sort((a, b) => b.score - a.score);
+    return categoryScores[0].data.response;
   }
 
   // Default response if no match found

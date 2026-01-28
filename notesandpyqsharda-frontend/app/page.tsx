@@ -1,8 +1,9 @@
 import Link from "next/link";
+import HomeContentShowcase from "@/components/HomeContentShowcase";
 
 export default function HomePage() {
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-[#F2F4F8] flex flex-col items-center justify-center text-center px-4 pt-10 relative overflow-hidden font-sans pb-24">
+    <div className="min-h-screen bg-[#F2F4F8] flex flex-col items-center text-center px-4 pt-10 relative overflow-hidden font-sans pb-24">
       {/* Decorative Background Elements */}
       <div className="absolute top-20 left-20 w-16 h-16 bg-blue-400 rounded-full opacity-20 blur-xl animate-pulse"></div>
       <div className="absolute bottom-20 right-20 w-24 h-24 bg-purple-400 rounded-full opacity-20 blur-xl animate-pulse delay-700"></div>
@@ -62,6 +63,9 @@ export default function HomePage() {
           Contribute
         </Link>
       </div>
+
+      {/* Content Showcase Section */}
+      <HomeContentShowcase />
 
       {/* Bottom Banner */}
       <div className="fixed bottom-0 left-0 w-full bg-[#2D334A] text-white py-4 px-6 flex justify-between items-center border-t-2 border-black z-10">

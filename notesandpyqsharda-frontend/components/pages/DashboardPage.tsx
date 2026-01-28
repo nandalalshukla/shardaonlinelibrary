@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import NotesForm from "@/components/forms/Notes";
 import PyqsForm from "@/components/forms/pyqs";
 import SyllabusForm from "@/components/forms/Syllabus";
@@ -15,6 +16,7 @@ export default function DashboardPage({
 }: {
   isEmbedded?: boolean;
 }) {
+  const searchParams = useSearchParams();
   const { user } = useAuthStore();
   const {
     myNotes,
@@ -46,7 +48,17 @@ export default function DashboardPage({
 
   useEffect(() => {
     fetchData();
-  }, []);
+
+    // Check for upload query parameter
+    const uploadType = searchParams.get("upload");
+    if (uploadType === "notes") {
+      openModal("note");
+    } else if (uploadType === "pyqs") {
+      openModal("pyq");
+    } else if (uploadType === "syllabus") {
+      openModal("syllabus");
+    }
+  }, [searchParams]);
 
   const isLoading = isNotesLoading || isPYQsLoading || isSyllabusLoading;
 

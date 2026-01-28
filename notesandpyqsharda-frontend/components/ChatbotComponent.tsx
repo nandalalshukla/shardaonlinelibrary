@@ -3,6 +3,60 @@
 import { useState, useRef, useEffect } from "react";
 import { useChatbotStore, SUGGESTED_QUESTIONS } from "@/stores/chatbot.store";
 
+// Format message content with proper styling
+function formatMessage(content: string) {
+  const lines = content.split("\n");
+  const elements: JSX.Element[] = [];
+
+  lines.forEach((line, idx) => {
+    // Skip empty lines
+    if (line.trim() === "") {
+      elements.push(<br key={`br-${idx}`} />);
+      return;
+    }
+
+    // Check for bold text (** **)
+    const parts = line.split(/\*\*(.*?)\*\*/g);
+    const formattedLine = parts.map((part, i) => {
+      if (i % 2 === 1) {
+        return (
+          <strong key={`bold-${idx}-${i}`} className="font-semibold">
+            {part}
+          </strong>
+        );
+      }
+      return part;
+    });
+
+    // Numbered list
+    if (/^\d+\.\s/.test(line)) {
+      elements.push(
+        <div key={`num-${idx}`} className="ml-4 mb-1">
+          {formattedLine}
+        </div>,
+      );
+    }
+    // Bullet point
+    else if (line.trim().startsWith("-")) {
+      elements.push(
+        <div key={`bullet-${idx}`} className="ml-4 mb-1">
+          {formattedLine}
+        </div>,
+      );
+    }
+    // Regular line
+    else {
+      elements.push(
+        <div key={`line-${idx}`} className="mb-1">
+          {formattedLine}
+        </div>,
+      );
+    }
+  });
+
+  return <div className="text-sm leading-relaxed">{elements}</div>;
+}
+
 export default function ChatbotWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -178,7 +232,6 @@ export default function ChatbotWidget() {
                     <button
                       key={idx}
                       onClick={async () => {
-                        setInput(question);
                         await sendMessage(question);
                       }}
                       className="w-full text-left px-3 py-2 text-xs bg-white border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-gray-700 hover:text-blue-600"
@@ -202,9 +255,13 @@ export default function ChatbotWidget() {
                           : "bg-white text-gray-800 border border-gray-200"
                       }`}
                     >
-                      <p className="text-sm whitespace-pre-wrap break-words">
-                        {message.content}
-                      </p>
+                      {message.role === "user" ? (
+                        <p className="text-sm whitespace-pre-wrap break-words">
+                          {message.content}
+                        </p>
+                      ) : (
+                        formatMessage(message.content)
+                      )}
                     </div>
                   </div>
                 ))}
