@@ -13,7 +13,10 @@ const GuestDesktopNav = () => {
         <Link href="/explore" className="hover:text-blue-600 transition-colors">
           Explore
         </Link>
-        <Link href="/dashboard" className="hover:text-blue-600 transition-colors">
+        <Link
+          href="/dashboard"
+          className="hover:text-blue-600 transition-colors"
+        >
           Contribute
         </Link>
         <Link
