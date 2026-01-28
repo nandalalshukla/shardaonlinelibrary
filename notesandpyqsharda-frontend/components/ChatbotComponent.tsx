@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useChatbotStore } from "@/stores/chatbot.store";
+import { useChatbotStore, SUGGESTED_QUESTIONS } from "@/stores/chatbot.store";
 
 export default function ChatbotWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -165,9 +165,28 @@ export default function ChatbotWidget() {
                 <h4 className="font-semibold text-gray-800 mb-1">
                   Welcome to Sharda AI!
                 </h4>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 mb-4">
                   Ask me anything about Sharda University
                 </p>
+
+                {/* Suggested Questions */}
+                <div className="w-full space-y-2 mt-4">
+                  <p className="text-xs text-gray-500 font-medium mb-2">
+                    Quick questions:
+                  </p>
+                  {SUGGESTED_QUESTIONS.map((question, idx) => (
+                    <button
+                      key={idx}
+                      onClick={async () => {
+                        setInput(question);
+                        await sendMessage(question);
+                      }}
+                      className="w-full text-left px-3 py-2 text-xs bg-white border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-gray-700 hover:text-blue-600"
+                    >
+                      {question}
+                    </button>
+                  ))}
+                </div>
               </div>
             ) : (
               <>

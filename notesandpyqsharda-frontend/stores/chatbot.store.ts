@@ -203,6 +203,14 @@ The diverse campus provides a truly global learning environment with exposure to
   },
 };
 
+// Suggested questions for users to click
+export const SUGGESTED_QUESTIONS = [
+  "What courses does Sharda University offer?",
+  "Tell me about the admission process",
+  "What are the placement opportunities?",
+  "How can I reach Sharda University campus?",
+];
+
 // Function to find best matching response from knowledge base
 function getFallbackResponse(userMessage: string): string {
   const messageLower = userMessage.toLowerCase();

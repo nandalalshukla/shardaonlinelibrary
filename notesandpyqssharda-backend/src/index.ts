@@ -8,6 +8,7 @@ import syllabusRouter from "./routes/syllabus-routes/syllabus.route.js";
 import adminRoutes from "./routes/admin-route/admin.routes.js";
 import resourceRoutes from "./routes/users-routes/resources.route.js";
 import modRoutes from "./routes/mod-routes/mod.routes.js";
+import chatbotRouter from "./routes/users-routes/chatbot.route.js";
 import corsConfig from "./config/cors.js";
 import cookieParser from "cookie-parser";
 //middleware to parse cookies
@@ -32,6 +33,7 @@ app.use("/api/v1/syllabus", syllabusRouter);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/mod", modRoutes);
 app.use("/api/v1/resources", resourceRoutes);
+app.use("/api/v1/chatbot", chatbotRouter);
 
 //default route to check if the server is running
 app.get("/", (req, res) => {
