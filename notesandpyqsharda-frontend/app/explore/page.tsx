@@ -172,9 +172,7 @@ export default function ExplorePage() {
     { name: "Notes", color: "bg-blue-300", icon: <FileTextIcon /> },
     { name: "PYQs", color: "bg-red-300", icon: <FileQuestionIcon /> },
     { name: "Syllabus", color: "bg-yellow-300", icon: <BookIcon /> },
-    { name: "Videos", color: "bg-green-300", icon: <VideoIcon /> },
-    { name: "Teachers", color: "bg-purple-300", icon: <UsersIcon /> },
-    { name: "More", color: "bg-gray-200", icon: <MoreIcon /> },
+
   ];
 
   const newItems = [

@@ -62,6 +62,7 @@ export default function ChatbotWidget() {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
 
   const { messages, isLoading, sendMessage, clearChat } = useChatbotStore();
 
@@ -69,11 +70,21 @@ export default function ChatbotWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Check if user is near bottom of scroll
+  const handleScroll = () => {
+    if (chatContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } =
+        chatContainerRef.current;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setShouldAutoScroll(isNearBottom);
+    }
+  };
+
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && shouldAutoScroll) {
       scrollToBottom();
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, shouldAutoScroll]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,6 +93,7 @@ export default function ChatbotWidget() {
 
     const message = input.trim();
     setInput("");
+    setShouldAutoScroll(true); // Enable auto-scroll for new messages
     await sendMessage(message);
   };
 
@@ -135,7 +147,7 @@ export default function ChatbotWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-96 h-[400px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200">
+        <div className="fixed bottom-24 right-6 lg:w-95 md:w-88 w-76 h-[400px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200">
           {/* Header */}
           <div className="bg-blue-600 text-white px-4 py-3 rounded-t-lg flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -196,6 +208,7 @@ export default function ChatbotWidget() {
           {/* Messages */}
           <div
             ref={chatContainerRef}
+            onScroll={handleScroll}
             className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50"
           >
             {messages.length === 0 ? (
@@ -232,6 +245,7 @@ export default function ChatbotWidget() {
                     <button
                       key={idx}
                       onClick={async () => {
+                        setShouldAutoScroll(true);
                         await sendMessage(question);
                       }}
                       className="w-full text-left px-3 py-2 text-xs bg-white border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-gray-700 hover:text-blue-600"

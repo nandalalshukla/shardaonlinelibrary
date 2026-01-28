@@ -67,15 +67,6 @@ export default function HomePage() {
       {/* Content Showcase Section */}
       <HomeContentShowcase />
 
-      {/* Bottom Banner */}
-      <div className="fixed bottom-0 left-0 w-full bg-[#2D334A] text-white py-4 px-6 flex justify-between items-center border-t-2 border-black z-10">
-        <div className="text-sm md:text-base font-medium">
-          🚀 Exam Season is here! Check out the latest PYQs now.
-        </div>
-        <button className="bg-white text-black px-4 py-2 rounded font-bold text-sm hover:bg-gray-200 transition-colors">
-          Check Now
-        </button>
-      </div>
     </div>
   );
 }
